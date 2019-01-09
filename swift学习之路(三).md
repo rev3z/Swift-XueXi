@@ -164,3 +164,58 @@ var Trial = 3.3
 Trial.square()
 print("圆的面积为: \(Trial1)")           // 输出 圆的面积为: 34.210935
 ```
+
+### 访问控制
+
+> 第一准则
+
+    如果一个类的访问级别是fileprivate,或private那么该类的所有成员都是fileprivate或private（此时成员无法修改访问级别）
+    
+    如果一个类的访问级别是open, internal或者public那么它的所有成员都是internal（如果类的访问级别是open或public，成员默认internal，此时可以单独修改成员的访问级别）
+    
+    类成员的访问级别不能高于类的访问级别
+
+> required修饰的必要构造方法的访问级别必须与类访问级别相同
+> #实现协议的基类，其构造函数要添加required，显性表明对子类的要求
+```swift
+// 无报错
+class Connection {
+    var no: Int
+    fileprivate init(no: Int) {
+        self.no = no
+    }
+}
+
+// 下面代码报错
+public protocol TcpProtocol {
+    init(no1: Int)
+}
+
+class Connection:TcpProtocol {
+    var no: Int
+    fileprivate required init(no: Int) {        // required修饰的内容 与类不处于同一个访问级别
+        self.no = no
+    }
+}
+```
+
+> 子类访问级别不高于父类访问级别，但是可以通过重写低级别的成员为高级别的成员
+```swift
+public class MainClass {
+    fileprivate var num: Int {
+        return 100
+    }
+    fileprivate func echo() {
+        print("MainClass")
+    }
+}
+
+private class SubClass: MainClass{
+    override var num: Int {
+        return 200
+    }
+    public override func echo() {
+        print("SubClass")
+    }
+}
+```
