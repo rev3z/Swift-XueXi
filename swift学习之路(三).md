@@ -124,3 +124,43 @@ samplechem = samplesub as? Chemistry                // nil
 samplesub: Subjects = Chemistry(physics: "固体物理", equations: "赫兹")
 samplechem = samplesub as Chemistry                 // 报错，向下转型不能直接用 as
 ```
+
+### 可变方法mutating
+
+> 之前有提到 mutating 用于值类型的属性修改
+```swift
+struct area {
+var length = 1
+var breadth = 1
+
+func area() -> Int {
+return length * breadth
+}
+
+mutating func scaleBy(res: Int) {
+length *= res
+breadth *= res
+
+print(length)
+print(breadth)
+}
+}
+
+var val = area(length: 3, breadth: 5)
+val.scaleBy(res: 3)                     // 输出 9(换行) 15
+```
+
+> 可变方法也可以用于在扩展中添加实例方法修改实例本身
+> #扩展本身只能添加不能重写已有功能，存储类型属性不属于功能，所以不能添加
+```swift
+extension Double {
+    mutating func square() {
+        let pi = 3.1415
+        self = pi * self * self
+    }
+}
+
+var Trial = 3.3
+Trial.square()
+print("圆的面积为: \(Trial1)")           // 输出 圆的面积为: 34.210935
+```
